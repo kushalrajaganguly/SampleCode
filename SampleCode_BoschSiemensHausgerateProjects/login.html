@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>BSHINFO Login</title>
+ 
+<style type="text/css">
+body {
+    background-color: #EEE;
+}
+</style>
+
+<script type="text/javascript" src="js/jsbn.js"></script>
+<script type="text/javascript" src="js/prng4.js"></script>
+<script type="text/javascript" src="js/rng.js"></script>
+<script type="text/javascript" src="js/rsa.js"></script>
+<script type="text/javascript" src="js/base64.js"></script>
+
+<script type="text/javascript">
+function rsaEncryption()
+	    { 
+	        var password = document.forms["loginForm"]["pwd"].value;
+	        var rsa = new RSAKey();
+		    rsa.setPublic(document.forms["loginForm"]["pubKey"].value, '10001');
+		    var res = rsa.encrypt(password);
+		    document.forms["loginForm"]["pwd"].value=res;
+	    } 
+
+</script>
+
+</head>
+ 
+<body>
+ 
+    <div align="center">
+        <br> <br>
+        <form name="loginForm" action="{servleturl}" method="get" accept-charset="UTF-8" onsubmit="return rsaEncryption();">
+            Enter Your Username: <input type="text" name="user"><br>
+            Enter Your Password: <input type="password" name="pwd" id="pwd"><br>
+            <input type="hidden" name="method" value="login"><br>
+            <input type="hidden" name="pubKey" {param_pubKey}><br>
+             <br> 
+             <input type="submit" value="Login">
+        </form>
+    </div>
+</body>
+</html>

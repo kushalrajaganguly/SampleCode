@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>BSHINFO</title>
+
+<style type="text/css">
+
+#tcmsg {
+	display: {msgvisibility};
+}
+#tcvers {
+	display: {versionvisibility};
+}
+
+#nxvers {
+	display: {nxvisibility};
+}
+#updatetcmsg {
+	display: {updatemsgvisibility};
+}
+</style>
+
+<link rel="stylesheet" type="text/css" href="style/jquery-ui.css">
+<link rel="stylesheet" type="text/css" href="style/jquery-ui.structure.css">
+<link rel="stylesheet" type="text/css" href="style/jquery-ui.theme.css">
+<link rel="stylesheet" type="text/css" href="style/bshstyle.css">
+
+<script src="js/jquery-1.11.3a.js"></script>
+<script src="js/jquery-ui.js"></script>
+<script type="text/javascript" src="js/jquery.tablesorter.js"></script> 
+
+<script type="text/javascript">
+	$(function(){
+		$( ".datepicker" ).datepicker({dateFormat: "dd.mm.yy"});
+		var date1=$('#textfromDate').val();
+		 var date2=$('#texttoDate').val();
+		$('#fromDateID').datepicker('setDate', date1);
+		$('#toDateID').datepicker('setDate', date2); 
+	});
+
+$(document).ready(function() 
+    { 
+        $("#hosttctable").tablesorter(); 
+        $("#msgtctable").tablesorter();
+        $("#versiontctable").tablesorter();
+        $("#versionnxtable").tablesorter();    
+        
+        var ddVal =  document.forms["TCVersForm"]["tcsystem"].value;
+        if(ddVal != ""){
+        	document.getElementById('tcverssystemID').value=ddVal.toUpperCase();
+        }
+        
+    } 
+); 
+
+function tcMsgInsertPage(passingUrl)
+{
+	window.location = passingUrl;
+}
+
+function tcVersionInsertPage(passingUrl)
+{
+	window.location = passingUrl;
+}
+
+function nxVersionInsertPage(passingUrl)
+{
+	window.location = passingUrl;
+}
+
+function CB(bg) {
+ 
+	if(bg=="otherImage")
+        {
+           document.getElementById("imageUploader").disabled=false;
+        }
+	else
+    {
+        document.getElementById("imageUploader").disabled=true;
+        $('#imageUploader').replaceWith($('#imageUploader').clone(true));
+ 
+    }
+}
+
+function requiredTCMsgForm()  {  
+
+	var emptMsg = document.forms["TCMsgForm"]["message"].value;  
+	var empttcsystem = document.forms["TCMsgForm"]["tcsystem"].value; 
+	var empttodate = document.forms["TCMsgForm"]["todate"].value;
+	var empttotime = document.forms["TCMsgForm"]["totime"].value;
+	var emptfromdate = document.forms["TCMsgForm"]["fromdate"].value; 
+	var emptfromtime = document.forms["TCMsgForm"]["fromtime"].value;
+    var radios = document.getElementsByName("selectedImg");
+    var radioValid = false;
+    var formValid = false;
+	var i = 0;
+	var totimeValid = /^([0-1]?[0-9]|2[0-4]):([0-5][0-9])(:[0-5][0-9])?$/.test(empttotime);
+	var fromtimeValid = /^([0-1]?[0-9]|2[0-4]):([0-5][0-9])(:[0-5][0-9])?$/.test(emptfromtime);
+	
+	while (!radioValid && i < radios.length) {
+        if (radios[i].checked) {
+        	document.getElementById('radioLabel').style.color = 'black';
+        	radioValid = true;
+        }
+        i++;        
+    }
+    
+	if (!radioValid) {
+    	document.getElementById('radioLabel').style.color = 'red';
+    }
+	
+	if (document.getElementById('otherImage-radio').checked) {
+		if(document.getElementById("imageUploader").value.length == 0){
+			radioValid = false;
+			alert("Please Upload an Image");
+		}
+		  
+		}
+
+	if (emptMsg == "" )  {  
+		document.getElementById('messageLabel').style.color = 'red';
+		}
+	if (emptMsg != "" )  {  
+		document.getElementById('messageLabel').style.color = 'black';
+		}
+	if (empttcsystem == "")  {  
+		document.getElementById('tcsystemLabel').style.color = 'red';
+		}
+	if (empttcsystem != "")  {  
+		document.getElementById('tcsystemLabel').style.color = 'black';
+		}
+	if (empttodate == "" || empttotime == "")  {  
+		document.getElementById('todateLabel').style.color = 'red';
+		}
+	if (empttodate != "" && empttotime != "")  {  
+		document.getElementById('todateLabel').style.color = 'black';
+		if(!totimeValid){
+			alert("Please Enter Time in Valid Format");
+		  }
+		}
+	if (emptfromdate == "" || emptfromtime == "")  {  
+		document.getElementById('fromdateLabel').style.color = 'red';
+		}
+	if (emptfromdate != "" && emptfromtime != "")  {  
+		document.getElementById('fromdateLabel').style.color = 'black';
+		if(!fromtimeValid){
+			alert("Please Enter Time in Valid Format");
+		  }
+		}
+	if(emptMsg != "" && empttcsystem != "" && empttodate != "" && emptfromdate != "" && radioValid && totimeValid && fromtimeValid){
+		formValid = true;
+	}
+		return formValid;  
+}
+
+function requiredTCVersForm()  {
+	document.forms["TCVersForm"]["tcsystem"].value=document.forms["TCVersForm"]["tcddsystem"].value;
+	var empttcsystem = document.forms["TCVersForm"]["tcsystem"].value;  
+	var emptbaseversion = document.forms["TCVersForm"]["baseversion"].value;
+	var emptbshversion = document.forms["TCVersForm"]["bshversion"].value;
+	var emptsvnversion = document.forms["TCVersForm"]["svnversion"].value;
+    var radios = document.getElementsByName("status");
+    var radioValid = false;
+    var formValid = false;
+    var isNumber = true;
+    var i=0;
+    
+	while (!radioValid && i < radios.length) {
+        if (radios[i].checked) {
+        	document.getElementById('StatusLabel').style.color = 'black';
+        	radioValid = true;
+        }
+        i++;        
+    }
+    
+	if (!radioValid) {
+    	document.getElementById('StatusLabel').style.color = 'red';
+    }
+   
+	if (empttcsystem == "" )  {  
+		document.getElementById('tcsystemversLabel').style.color = 'red';
+		}
+	if (empttcsystem != "" )  {  
+		document.getElementById('tcsystemversLabel').style.color = 'black';
+		}
+	if (emptbaseversion == "")  {  
+		document.getElementById('baseversionLabel').style.color = 'red';
+		}
+	if (emptbaseversion != "")  {  
+		document.getElementById('baseversionLabel').style.color = 'black';
+		}
+	if (emptbshversion == "" )  {  
+		document.getElementById('bshversionLabel').style.color = 'red';
+		}
+	if (emptbshversion != "" )  {  
+		document.getElementById('bshversionLabel').style.color = 'black';
+		}
+	if (emptsvnversion == "")  {  
+		document.getElementById('svnversionLabel').style.color = 'red';
+		}
+	if (emptsvnversion != "")  {  
+		document.getElementById('svnversionLabel').style.color = 'black';
+		if(isNaN(emptsvnversion)){
+			alert("Please enter number only for SVN Version");
+			isNumber = false;
+		}
+		}
+	
+	if(empttcsystem != "" && emptbaseversion != "" && emptbshversion != "" && emptsvnversion != "" && radioValid && isNumber){
+		formValid = true;
+	}
+		return formValid;  
+    
+}
+
+function requiredNXVersForm()  {  
+
+	var emptnxfield = document.forms["NXVersForm"]["nxfield"].value;  
+	var empttypefield = document.forms["NXVersForm"]["typefield"].value; 
+	var emptfromDate = document.forms["NXVersForm"]["fromDate"].value;
+	var emptbegin = document.forms["NXVersForm"]["begin"].value;
+	var empttoDate = document.forms["NXVersForm"]["toDate"].value; 
+	var emptend = document.forms["NXVersForm"]["end"].value;
+	var emptbshnxversion = document.forms["NXVersForm"]["bshnxversion"].value; 
+	var emptsplmnxversion = document.forms["NXVersForm"]["splmnxversion"].value;
+    var formValid = false;
+    var fromtimeValid = /^([0-1]?[0-9]|2[0-4]):([0-5][0-9])(:[0-5][0-9])?$/.test(emptbegin);
+	var totimeValid = /^([0-1]?[0-9]|2[0-4]):([0-5][0-9])(:[0-5][0-9])?$/.test(emptend);
+
+	if (emptnxfield == "" )  {  
+		document.getElementById('nxfieldLabel').style.color = 'red';
+		}
+	if (emptnxfield != "" )  {  
+		document.getElementById('nxfieldLabel').style.color = 'black';
+		}
+	if (empttypefield == "")  {  
+		document.getElementById('typefieldLabel').style.color = 'red';
+		}
+	if (empttypefield != "")  {  
+		document.getElementById('typefieldLabel').style.color = 'black';
+		}
+	if (emptfromDate == "" || emptbegin == "")  {  
+		document.getElementById('fromDateIDLabel').style.color = 'red';
+		}
+	if (emptfromDate != "" && emptbegin != "")  {  
+		document.getElementById('fromDateIDLabel').style.color = 'black';
+		if(!fromtimeValid){
+			alert("Please Enter Time in Valid Format");
+		  }
+		}
+	if (empttoDate == "" || emptend == "")  {  
+		document.getElementById('toDateIDLabel').style.color = 'red';
+		}
+	if (empttoDate != "" && emptend != "")  {  
+		document.getElementById('toDateIDLabel').style.color = 'black';
+		if(!totimeValid){
+			alert("Please Enter Time in Valid Format");
+		  }
+		}
+	if (emptbshnxversion == "")  {  
+		document.getElementById('bshnxversionLabel').style.color = 'red';
+		}
+	if (emptbshnxversion != "")  {  
+		document.getElementById('bshnxversionLabel').style.color = 'black';
+		}
+	if (emptsplmnxversion == "")  {  
+		document.getElementById('splmnxversionLabel').style.color = 'red';
+		}
+	if (emptsplmnxversion != "")  {  
+		document.getElementById('splmnxversionLabel').style.color = 'black';
+		}
+
+	if(emptnxfield != "" && empttypefield != "" && emptfromDate != "" && empttoDate != "" && emptbshnxversion != "" && emptsplmnxversion != "" && totimeValid && fromtimeValid){
+		formValid = true;
+	}
+		return formValid;  
+}
+
+function requiredUpdateTCMsgForm()  {  
+
+	var emptupdatetcsystem = document.forms["TCMsgUpdateForm"]["updatetcsystem"].value;
+	var emptupdatefromdate = document.forms["TCMsgUpdateForm"]["updatefromdate"].value; 
+	var emptupdatefromtime = document.forms["TCMsgUpdateForm"]["updatefromtime"].value;
+	var emptupdatetodate = document.forms["TCMsgUpdateForm"]["updatetodate"].value; 
+	var emptupdatetotime = document.forms["TCMsgUpdateForm"]["updatetotime"].value;
+	var emptupdatemessage = document.forms["TCMsgUpdateForm"]["updatemessage"].value;
+    var formValid = false;
+    var fromtimeValid = /^([0-1]?[0-9]|2[0-4]):([0-5][0-9])(:[0-5][0-9])?$/.test(emptupdatefromtime);
+	var totimeValid = /^([0-1]?[0-9]|2[0-4]):([0-5][0-9])(:[0-5][0-9])?$/.test(emptupdatetotime);
+
+	if (emptupdatetcsystem == "" )  {  
+		document.getElementById('updatetcsystemLabel').style.color = 'red';
+		}
+	if (emptupdatetcsystem != "" )  {  
+		document.getElementById('updatetcsystemLabel').style.color = 'black';
+		}
+	if (emptupdatetodate == "" || emptupdatetotime == "")  {  
+		document.getElementById('updatetodateLabel').style.color = 'red';
+		}
+	if (emptupdatetodate != "" && emptupdatetotime != "")  {  
+		document.getElementById('updatetodateLabel').style.color = 'black';
+		if(!totimeValid){
+			alert("Please Enter Time in Valid Format");
+		  }
+		}
+	if (emptupdatefromdate == "" || emptupdatefromtime == "")  {  
+		document.getElementById('updatefromdateLabel').style.color = 'red';
+		}
+	if (emptupdatefromdate != "" && emptupdatefromtime != "")  {  
+		document.getElementById('updatefromdateLabel').style.color = 'black';
+		if(!fromtimeValid){
+			alert("Please Enter Time in Valid Format");
+		  }
+		}
+	if (emptupdatemessage == "" )  {  
+		document.getElementById('updatemessageLabel').style.color = 'red';
+		}
+	if (emptupdatemessage != "" )  {  
+		document.getElementById('updatemessageLabel').style.color = 'black';
+		}
+	
+	if(emptupdatemessage != "" && emptupdatetcsystem != "" && emptupdatetodate != "" && emptupdatefromdate != "" && totimeValid && fromtimeValid){
+		formValid = true;
+	}
+		return formValid;  
+}
+
+</script>
+
+</head>
+
+<body>
+<div id="wrapper">
+	<div id="top-menu">
+    	<div id="account">
+        	<ul><!-- 
+        		<li><a class="my-account" href="/my/account">My account</a></li> -->
+				<li><a class="logout" rel="nofollow" data-method="get" href="{servleturl}?method=logout">Sign out</a></li>
+			</ul>   
+	 	</div>
+    	<div id="loggedas">Logged in as {user}
+    	</div>
+    	<ul>
+    		<li><a class="home" href="{servleturl}">Home</a></li>
+<!-- 
+<li><a class="my-page" href="/my/page">My page</a></li>
+<li><a class="projects" href="/projects">Projects</a></li>
+ -->
+			<li><a class="redmine" href="http://redmine.bshg.com">Redmine</a></li>
+			<li><a class="my-link" href="http://redmine.bshg.com/newjenkins/">Jenkins</a></li>
+		</ul>
+    </div>
+	<div id="header">
+    
+		<h1>BSH NX / TC Version and INFO</h1>
+	</div>
+	
+	<div id="mainmenu">
+	{param_mainmenu}
+
+		<!-- <a href="{servleturl}?method=logout">logout</a> -->
+	</div>
+	
+	<div id="tcmsg">
+		<form name=TCMsgForm action="{servleturl}" method="post"
+			enctype="multipart/form-data" onsubmit="return requiredTCMsgForm();">
+			<table>
+				
+				<tr>
+					<td><label id="radioLabel">Select Image<sup>*</sup></label></td>
+				</tr>
+				<tr>	
+					<td><input type="radio" name="selectedImg" value="otherImage" id="otherImage-radio" onClick="CB(this.value);"></td>
+					<td><input type="file" name="file" id="imageUploader" multiple="multiple" disabled="disabled" /></td>	
+					{param_selectImage}
+				</tr>
+			</table>	
+			<table>	
+				<tr>
+					<td>Start TC Allowed</td>
+					<td><input type="radio" name="starttcallowed" value="1"
+						checked> YES <br>
+					<input type="radio" name="starttcallowed" value="0"> No</td>
+				</tr>
+				<tr>
+					<td>Onetime</td>
+					<td><input type="radio" name="onetime" value="1" checked>
+						YES <br>
+					<input type="radio" name="onetime" value="0"> No</td>
+				</tr>
+				<tr>
+					<td>Level</td>
+					<td><input type="radio" name="type" value="warning" checked>
+						Warning <br>
+					<input type="radio" name="type" value="info"> Info</td>
+				</tr>
+				<tr>
+					<td><label for="tcsystem" id="tcsystemLabel">TC System<sup>*</sup></label></td>
+					<td><select name="tcsystem" id="tcsystem">
+							<option value="PLMEU">PLMEU</option>
+ 							<option value="PLMCEU">PLMCEU</option>
+ 							<option value="PLMD8">PLMD8</option>
+ 							<option value="PLMD7">PLMD7</option>
+ 							<option value="PLMD1">PLMD1</option>
+ 							<option value="PLMI2">PLMI2</option>
+ 							<option value="PLMT7">PLMT7</option>
+ 							<option value="PLMRF">PLMRF</option>
+ 						</select></td>
+				</tr>
+				<tr>
+					<td><label for="fromdate" id="fromdateLabel">Valid From<sup>*</sup></label></td>
+					<td><input type="text" name="fromdate" id="fromdate" class="datepicker">(dd.mm.yyyy)</td>
+					<td><input type="text" name="fromtime" id="fromtime" value="20:00">(24hh:mm)</td>
+				</tr>
+
+				<tr>
+					<td><label for="todate" id="todateLabel">Valid To<sup>*</sup></label></td>
+					<td><input type="text" name="todate" id="todate" class="datepicker">(dd.mm.yyyy)</td>
+					<td><input type="text" name="totime" value="20:00">(24hh:mm)</td>
+				</tr>
+				
+				<tr>
+					<td><label for="message" id="messageLabel">Message<sup>*</sup></label></td>
+					<td><textarea name="message" id="message" cols="35" rows="4"></textarea></td>
+				</tr>
+				
+			</table>
+			<input type="hidden" name="method" value="tcmsgdata">
+			<input type="submit" value="Insert into DB">
+		</form>
+	</div>
+
+	<div id="updatetcmsg">
+		<form name=TCMsgUpdateForm action="{servleturl}" method="get"
+			enctype="multipart/form-data" onsubmit="return requiredUpdateTCMsgForm();">
+	
+			<table>	
+				<tr>
+					<td>Start TC Allowed</td>
+					<td><input type="radio" name="updatestarttcallowed" value="1" {param_updatestarttcallowed_yes} > YES <br>
+					<input type="radio" name="updatestarttcallowed" value="0" {param_updatestarttcallowed_no} > No</td>
+				</tr>
+				<tr>
+					<td>Onetime</td>
+					<td><input type="radio" name="updateonetime" value="1" {param_updateonetime_yes} >
+						YES <br>
+					<input type="radio" name="updateonetime" value="0" {param_updateonetime_no} > No</td>
+				</tr>
+				<tr>
+					<td>Level</td>
+					<td><input type="radio" name="updatetype" value="warning" {param_updatetype_warning} >
+						Warning <br>
+					<input type="radio" name="updatetype" value="info" {param_updatetype_info} > Info</td>
+				</tr>
+				<tr>
+					<td><label for="updatetcsystem" id="updatetcsystemLabel">TC System<sup>*</sup></label></td>
+					<td><select name="updatetcsystem" id="updatetcsystem">
+							<option value="PLMEU" {param_tcSystem_PLMEU} >PLMEU</option>
+ 							<option value="PLMCEU" {param_tcSystem_PLMCEU} >PLMCEU</option>
+ 							<option value="PLMD8" {param_tcSystem_PLMD8} >PLMD8</option>
+ 							<option value="PLMD7" {param_tcSystem_PLMD7} >PLMD7</option>
+ 							<option value="PLMD1" {param_tcSystem_PLMD1} >PLMD1</option>
+ 							<option value="PLMI2" {param_tcSystem_PLMI2} >PLMI2</option>
+ 							<option value="PLMT7" {param_tcSystem_PLMT7} >PLMT7</option>
+ 							<option value="PLMRF" {param_tcSystem_PLMRF} >PLMRF</option>
+ 						</select></td>
+				</tr>
+				<tr>
+					<td><label for="updatefromdate" id="updatefromdateLabel">Valid From<sup>*</sup></label></td>
+					<td><input type="text" name="updatefromdate" id="updatefromdate" class="datepicker" {param_updatefromdate} >(dd.mm.yyyy)</td>
+					<td><input type="text" name="updatefromtime" id="updatefromtime" {param_updatefromtime} >(24hh:mm)</td>
+				</tr>
+
+				<tr>
+					<td><label for="updatetodate" id="updatetodateLabel">Valid To<sup>*</sup></label></td>
+					<td><input type="text" name="updatetodate" id="updatetodate" class="datepicker" {param_updatetodate} >(dd.mm.yyyy)</td>
+					<td><input type="text" name="updatetotime" {param_updatetotime} >(24hh:mm)</td>
+				</tr>
+				
+				<tr>
+					<td><label for="updatemessage" id="updatemessageLabel">Message<sup>*</sup></label></td>
+					<td><textarea name="updatemessage" id="updatemessage" cols="35" rows="4" >{param_updatemessage}</textarea></td>
+				</tr>
+				
+			</table>
+			<input type="hidden" name="msgidfield" {param_msgidfield} value="0">
+			<input type="hidden" name="method" value="updatetcmsgdata">
+			<input type="submit" value="Update DB">
+		</form>
+	</div>
+
+	
+	<div id="tcvers">
+		<form name="TCVersForm" action="{servleturl}" method="get"
+			enctype="multipart/form-data"  onsubmit="return requiredTCVersForm();">
+			<table>
+				<tr>
+					<td><label id="tcsystemversLabel">TC System<sup>*</sup></label></td>
+					<td><select name="tcddsystem" id="tcverssystemID" >
+							<option value="PLMEU">PLMEU</option>
+ 							<option value="PLMCEU">PLMCEU</option>
+ 							<option value="PLMD8">PLMD8</option>
+ 							<option value="PLMD7">PLMD7</option>
+ 							<option value="PLMD1">PLMD1</option>
+ 							<option value="PLMI2">PLMI2</option>
+ 							<option value="PLMT7">PLMT7</option>
+ 							<option value="PLMRF">PLMRF</option>
+ 						</select></td>
+				</tr>
+				<tr>
+					<td><label id="baseversionLabel">Base version<sup>*</sup></label></td>
+					<td><input type="text" name="baseversion" {param_baseversion} /></td>
+				</tr>
+				<tr>
+					<td><label id="bshversionLabel">BSH version<sup>*</sup></label></td>
+					<td><input type="text" name="bshversion" {param_bshversion} /></td>
+				</tr>
+				<tr>
+					<td><label id="svnversionLabel">SVN version<sup>*</sup></label></td>
+					<td><input type="text" name="svnversion" {param_svnversion} /></td>
+				</tr>
+				<tr>
+					<td><label id="StatusLabel">Status<sup>*</sup></label></td>
+					<td>
+						<input type="radio" name="status" value="{tcversion_textstatusactive}" {param_status_active} /> active <br />
+						<input type="radio" name="status" value="{tcversion_textstatusdepricated}" {param_status_deprecated} /> old but runnable <br />
+						<input type="radio" name="status" value="{tcversion_textstatustoold}"  {param_status_toold}/> too old version to start <br />
+					</td>
+				</tr>
+				<tr>
+					<td>comment</td>
+					<td><input type="text" name="comment"  {param_comment} /></td>
+				</tr>
+			</table>
+			<input type="hidden" name="tcidfield" {param_tcidfield} value="0">
+			<input type="hidden" name="method" value="tcversdata">
+			<input type="hidden" name="tcsystem" id="tcvershiddenID" {param_tcsystem} />
+			<input type="submit" value="Insert into DB">
+		</form>
+	</div>	
+	
+		<div id="nxvers">
+		<form name="NXVersForm" action="{servleturl}" method="get"
+			enctype="multipart/form-data" onsubmit="return requiredNXVersForm();">
+			<table>
+				<tr>
+					<td><label id="nxfieldLabel">NX<sup>*</sup></label></td>
+					<td><input type="text" name="nxfield" {param_nxfield}  maxlength="6" /></td>
+				</tr>
+				<tr>
+					<td><label id="typefieldLabel">Type<sup>*</sup></label></td>
+					<td><input type="text"  name=typefield {param_typefield} maxlength="20" /></td>
+				</tr>
+				<tr>
+					<td><label id="fromDateIDLabel">Valid From<sup>*</sup></label></td>
+					<td><input type="text" class="datepicker" id="fromDateID" name=fromDate {param_fromDate}  />(dd.mm.yyyy)</td>
+					<td><input type="text" name=begin {param_begin} value="20:00:00" />(24hh:mm:ss)</td>
+				</tr>
+				<tr>
+					<td><label id="toDateIDLabel">Valid To<sup>*</sup></label></td>
+					<td><input type="text" class="datepicker" id="toDateID" name=toDate {param_toDate} />(dd.mm.yyyy)</td>
+					<td><input type="text" name=end {param_end} value="20:00:00" />(24hh:mm:ss)</td>
+				</tr>
+				<tr>
+					<td><label id="bshnxversionLabel">BSH NX VERSION<sup>*</sup></label></td>
+					<td><input type="text" name=bshnxversion {param_bshnxversion} maxlength="30" /></td>
+				</tr>
+				<tr>
+					<td><label id="splmnxversionLabel">SPLM NX VERSION<sup>*</sup></label></td>
+					<td><input type="text" name=splmnxversion {param_splmnxversion} maxlength="40" /></td>
+				</tr>
+				<tr>
+					<td>Minimum Version</td>
+					<td><input type="text" name=minversion {param_minversion} maxlength="30" /></td>
+				</tr>
+				<tr>
+					<td>WebLink</td>
+					<td><input type="text" name=weblink {param_weblink} maxlength="250" /></td>
+				</tr>
+				
+			</table>
+			<input type="hidden" id="textfromDate" name="textvalidfrom" {param_textvalidfrom} />
+			<input type="hidden" id="texttoDate" name="textvalidto" {param_textvalidto} />
+			<input type="hidden" name="idfield" {param_idfield} value="0">
+			<input type="hidden" name="method" value="nxversdata">
+			<input type="submit" value="Insert into DB">
+		</form>
+	</div>	
+	
+	{bodycontend}
+	</div>
+</body>
+</html>
